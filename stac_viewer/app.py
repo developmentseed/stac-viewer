@@ -1,34 +1,26 @@
 """stac viewer app."""
 
-from typing import Any, Optional
-
 import os
 import re
 import urllib.parse
-from starlette.requests import Request
-from starlette.responses import Response, HTMLResponse
-from starlette.templating import Jinja2Templates
-
-from rio_viz.app import viz as BaseVizClass
-
-from rio_viz.raster import postprocess_tile
-from rio_tiler.utils import render
-from rio_viz.models.mapbox import TileJSON
-from rio_tiler.colormap import get_colormap
-from rio_tiler.profiles import img_profiles
-
-from rio_viz.ressources.enums import ImageType
-from rio_viz.ressources.common import drivers, mimetype
-from rio_viz.ressources.responses import TileResponse
+from functools import partial
+from typing import Any, Optional
 
 from fastapi import Depends, Query
-from functools import partial
-
-from starlette.concurrency import run_in_threadpool
-from starlette.templating import _TemplateResponse
-
+from rio_tiler.colormap import get_colormap
+from rio_tiler.profiles import img_profiles
+from rio_tiler.utils import render
+from rio_viz.app import viz as BaseVizClass
+from rio_viz.models.mapbox import TileJSON
+from rio_viz.raster import postprocess_tile
+from rio_viz.ressources.common import drivers, mimetype
+from rio_viz.ressources.enums import ImageType
+from rio_viz.ressources.responses import TileResponse
 from stac_viewer.templates.template import index_template_factory
-
+from starlette.concurrency import run_in_threadpool
+from starlette.requests import Request
+from starlette.responses import HTMLResponse, Response
+from starlette.templating import Jinja2Templates, _TemplateResponse
 
 dir = os.path.dirname(__file__)
 templates = Jinja2Templates(directory=f"{dir}/templates")

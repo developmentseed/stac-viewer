@@ -1,16 +1,12 @@
 """rio_viz.raster: raster tiles object."""
 
-from typing import Any, Dict, Tuple, Sequence
-
 from concurrent import futures
-
-import requests
+from typing import Any, Dict, Sequence, Tuple
 
 import numpy
-
+import requests
 from rio_tiler.io import stac as STACTiler
 from rio_tiler.io.cogeo import info as cogInfo
-
 
 valid_type = [
     "image/tiff; application=geotiff",
