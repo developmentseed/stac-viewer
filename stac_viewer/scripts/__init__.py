@@ -1,0 +1,1 @@
+"""cogeo-mosaic-viewer cli."""
