@@ -31,9 +31,6 @@ class MbxTokenType(click.ParamType):
 
 # add minzoom
 # add maxzoom
-# add asset exclude (e.g thumbnail)
-
-
 @click.command()
 @click.argument("stac_path", type=str)
 @click.option(

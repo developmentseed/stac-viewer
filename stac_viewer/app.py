@@ -7,7 +7,7 @@ from functools import partial
 from typing import Any, Optional
 
 from fastapi import Depends, Query
-from rio_tiler.colormap import get_colormap
+from rio_tiler.colormap import cmap
 from rio_tiler.profiles import img_profiles
 from rio_tiler.utils import render
 from rio_viz.app import viz as BaseVizClass
@@ -113,17 +113,16 @@ class vizStac(BaseVizClass):
                 tile, mask, rescale=rescale, color_formula=color_formula
             )
 
-            if color_map:
-                color_map = get_colormap(color_map)
-
             if not ext:
                 ext = ImageType.jpg if mask.all() else ImageType.png
 
             driver = drivers[ext]
             options = img_profiles.get(driver.lower(), {})
-            content = await _render(
-                tile, mask, colormap=color_map, img_format=driver, **options
-            )
+
+            if color_map:
+                options["colormap"] = cmap.get(color_map)
+
+            content = await _render(tile, mask, img_format=driver, **options)
             return TileResponse(content, media_type=mimetype[ext.value])
 
         @self.app.get(

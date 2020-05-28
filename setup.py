@@ -3,7 +3,7 @@
 from setuptools import find_packages, setup
 
 # Runtime requirements.
-inst_reqs = ["rio-viz", "requests"]
+inst_reqs = ["rio-viz~=0.2.1", "requests"]
 
 setup(
     name="stac-viewer",

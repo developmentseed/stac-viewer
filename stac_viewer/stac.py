@@ -1,12 +1,16 @@
 """rio_viz.raster: raster tiles object."""
 
+import json
 from concurrent import futures
 from typing import Any, Dict, Sequence, Tuple
+from urllib.parse import urlparse
 
 import numpy
 import requests
 from rio_tiler.io import stac as STACTiler
 from rio_tiler.io.cogeo import info as cogInfo
+
+from .utils import s3_get_object
 
 valid_type = [
     "image/tiff; application=geotiff",
@@ -28,9 +32,20 @@ class STACTiles(object):
     ):
         """Initialize STACTiles object."""
         self.path = src_path
+        self.item: Dict[str, Any]
 
-        # TODO HANDLE LOCAL / S3 files
-        self.item: Dict[str, Any] = requests.get(src_path).json()
+        parsed = urlparse(self.path)
+        if parsed.scheme == "s3":
+            bucket = parsed.netloc
+            key = parsed.path.strip("/")
+            self.item = json.loads(s3_get_object(bucket, key))
+
+        elif parsed.scheme in ["https", "http", "ftp"]:
+            self.item = requests.get(self.path).json()
+
+        else:
+            with open(self.path, "r") as f:
+                self.item = json.load(f)
 
         self.asset_names: Sequence[str] = [
             asset
