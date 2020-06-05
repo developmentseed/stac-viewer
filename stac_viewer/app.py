@@ -16,17 +16,30 @@ from rio_viz.raster import postprocess_tile
 from rio_viz.ressources.common import drivers, mimetype
 from rio_viz.ressources.enums import ImageType
 from rio_viz.ressources.responses import TileResponse
-from stac_viewer.templates.template import index_template_factory
 from starlette.concurrency import run_in_threadpool
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, Response
 from starlette.templating import Jinja2Templates, _TemplateResponse
+
+from stac_viewer.templates.template import index_template_factory
 
 dir = os.path.dirname(__file__)
 templates = Jinja2Templates(directory=f"{dir}/templates")
 
 _postprocess_tile = partial(run_in_threadpool, postprocess_tile)
 _render = partial(run_in_threadpool, render)
+
+
+valid_type = [
+    "image/tiff; application=geotiff",
+    "image/tiff; application=geotiff; profile=cloud-optimized",
+    "image/vnd.stac.geotiff; cloud-optimized=true",
+    "image/tiff",
+    "image/x.geotiff",
+    "image/jp2",
+    "application/x-hdf5",
+    "application/x-hdf",
+]
 
 
 class vizStac(BaseVizClass):
@@ -129,16 +142,7 @@ class vizStac(BaseVizClass):
             "/stac/tilejson.json",
             response_model=TileJSON,
             responses={200: {"description": "Return a tilejson"}},
-            response_model_include={
-                "tilejson",
-                "scheme",
-                "version",
-                "minzoom",
-                "maxzoom",
-                "bounds",
-                "center",
-                "tiles",
-            },  # https://github.com/tiangolo/fastapi/issues/528#issuecomment-589659378
+            response_model_exclude_none=True,
         )
         def stac_tilejson(
             request: Request,

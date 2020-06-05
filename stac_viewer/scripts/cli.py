@@ -3,6 +3,7 @@
 import os
 
 import click
+
 from stac_viewer import app, stac
 
 
@@ -89,8 +90,10 @@ def viewer(stac_path, style, port, host, mapbox_token, exclude, separate):
             - application/x-hdf
 
     """
-    # Check if cog
-    src_dst = stac.STACTiles(stac_path, exclude=exclude)
+    if exclude:
+        exclude = set(exclude)
+
+    src_dst = stac.STACTiles(stac_path, exclude_assets=exclude)
     application = app.vizStac(
         src_dst,
         token=mapbox_token,
