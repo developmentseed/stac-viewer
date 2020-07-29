@@ -3,11 +3,10 @@
 from typing import Any, Dict, Sequence, Tuple
 
 import numpy
+from rio_tiler.io import STACReader
 
-from stac_tiler import STACReader
 
-
-class STACTiles(object):
+class STACTiles:
     """STAC tiles object."""
 
     def __init__(self, src_path: str, **kwargs):
@@ -30,5 +29,5 @@ class STACTiles(object):
 
     def info(self) -> Dict:
         """Return general info about the images."""
-        info = self.stac.info(self.assets)
+        info = self.stac.info(assets=self.assets)
         return {"bounds": self.stac.bounds, "assets": info}

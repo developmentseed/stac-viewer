@@ -3,7 +3,7 @@
 from setuptools import find_packages, setup
 
 # Runtime requirements.
-inst_reqs = ["rio-viz~=0.2.1", "stac-tiler~=0.0rc2", "requests"]
+inst_reqs = ["rio-viz~=0.3.0"]
 
 setup(
     name="stac-viewer",
@@ -18,7 +18,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Scientific/Engineering :: GIS",
     ],
-    keywords="STAC",
+    keywords="STAC COG GIS",
     packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
     include_package_data=True,
     zip_safe=False,

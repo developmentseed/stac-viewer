@@ -30,18 +30,6 @@ _postprocess_tile = partial(run_in_threadpool, postprocess_tile)
 _render = partial(run_in_threadpool, render)
 
 
-valid_type = [
-    "image/tiff; application=geotiff",
-    "image/tiff; application=geotiff; profile=cloud-optimized",
-    "image/vnd.stac.geotiff; cloud-optimized=true",
-    "image/tiff",
-    "image/x.geotiff",
-    "image/jp2",
-    "application/x-hdf5",
-    "application/x-hdf",
-]
-
-
 class vizStac(BaseVizClass):
     """Creates a very minimal slippy map tile server using fastAPI + Uvicorn."""
 
